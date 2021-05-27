@@ -12,7 +12,7 @@
 
 
     <EditText
-        android:id="@+id/result"
+        android:id="@+id/editText3"
         android:layout_column="0"
         android:layout_columnSpan="4"
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
         android:inputType="text" 
         />
     <EditText
-        android:id="@+id/value1"
+        android:id="@+id/editText1"
         android:layout_columnSpan="2"
         android:layout_column="0"
         android:layout_width="170dp"
@@ -30,7 +30,7 @@
         android:inputType="text" 
         />
     <EditText
-        android:id="@+id/value2"
+        android:id="@+id/editText2"
         android:layout_column="2"
         android:layout_columnSpan="2"
         android:layout_width="170dp"
@@ -39,7 +39,7 @@
         />
     <Button
         android:text="Suppr"
-        android:id="@+id/btnSuppr"
+        android:id="@+id/btnSuppr "
         android:layout_columnSpan="4"
         android:layout_width="350dp"
         android:layout_height="170px"
@@ -49,7 +49,7 @@
         />
     <Button
         android:text="+"
-        android:id="@+id/buttonPlus"
+        android:id="@+id/btnPlus"
         android:layout_column="3"
         android:layout_row="3"
         android:layout_height="70dp"
@@ -89,7 +89,7 @@
         />
     <Button
         android:text="-"
-        android:id="@+id/buttonMoin"
+        android:id="@+id/btnMoin"
         android:layout_column="3"
         android:layout_row="4"
         android:layout_height="70dp"
@@ -129,7 +129,7 @@
         />
     <Button
         android:text="*"
-        android:id="@+id/buttonMultiple"
+        android:id="@+id/btnMultiple"
         android:layout_column="3"
         android:layout_row="5"
         android:layout_height="70dp"
@@ -169,7 +169,7 @@
         />
     <Button
         android:text="/"
-        android:id="@+id/buttonDivision"
+        android:id="@+id/btnDivision"
         android:layout_column="3"
         android:layout_row="6"
         android:layout_height="70dp"
@@ -189,7 +189,7 @@
         />
     <Button
         android:text="."
-        android:id="@+id/buttonPoint"
+        android:id="@+id/btnPoint"
         android:layout_column="1"
         android:layout_row="6"
         android:layout_height="70dp"
@@ -199,7 +199,7 @@
         />
     <Button
         android:text="="
-        android:id="@+id/buttonEgale"
+        android:id="@+id/btnEgale"
         android:layout_column="0"
         android:layout_row="6"
         android:layout_height="70dp"
