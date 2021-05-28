@@ -1,6 +1,7 @@
 ﻿using Android.App;
 using Android.OS;
 using Android.Runtime;
+using Android.Views;
 using Android.Widget;
 using AndroidX.AppCompat.App;
 using System;
@@ -10,19 +11,12 @@ namespace Android_calculatrice
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
     public class MainActivity : AppCompatActivity
     {
-        EditText firstValue;
-        EditText secondValue;
-        EditText result;
 
+        private TextView calculatorText;
 
-        Button ButtonSuppr;
-        Button ButtonPlus;
-        Button ButtonMoin;
-        Button ButtonMultiple;
-        Button ButtonDivision;
-        Button ButtonEgale;
+        private string[] numbers = new string[2];
+        private string @operator;
 
-        double a, b, c;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -31,118 +25,90 @@ namespace Android_calculatrice
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.activity_main);
 
-            firstValue = FindViewById<EditText>(Resource.Id.editText1);
-            secondValue = FindViewById<EditText>(Resource.Id.editText2);
-            result = FindViewById<EditText>(Resource.Id.editText3);
+            calculatorText = FindViewById<TextView>(Resource.Id.editText3);
 
-            ButtonSuppr = FindViewById<Button>(Resource.Id.btnSuppr);
-            ButtonPlus = FindViewById<Button>(Resource.Id.btnPlus);
-            ButtonMoin = FindViewById<Button>(Resource.Id.btnMoin);
-            ButtonMultiple = FindViewById<Button>(Resource.Id.btnMultiple);
-            ButtonDivision = FindViewById<Button>(Resource.Id.btnDivision);
-            ButtonEgale = FindViewById<Button>(Resource.Id.btnEgale);
 
-            computationButtons();
 
         }
-
-        protected void computationButtons()
+        [Java.Interop.Export("ButtonClick")]
+        public void ButtonClick(View v)
         {
-            ButtonPlus.Click += delegate
-            {
-                try
-                {
-
-                    a = double.Parse(firstValue.Text);
-                    b = double.Parse(secondValue.Text);
-                    c = a + b;
-                    result.Text = c.ToString();
-
-
-                }
-                catch (Exception ex)
-                {
-
-
-                    firstValue.Text = "Input Number(s)";
-                    secondValue.Text = "Input Number(s)";
-                    result.Text = "Invalid Operation";
-                }
-            };
-
-            ButtonMoin.Click += delegate
-            {
-                try
-                {
-                    a = double.Parse(firstValue.Text);
-                    b = double.Parse(secondValue.Text);
-                    c = a - b;
-                    result.Text = c.ToString();
-                }
-                catch (Exception ex)
-                {
-
-
-                    firstValue.Text = "Input Number(s)";
-                    secondValue.Text = "Input Number(s)";
-                    result.Text = "Invalid Operation";
-                }
-            };
-
-            ButtonMultiple.Click += delegate
-            {
-                try
-                {
-                    a = double.Parse(firstValue.Text);
-                    b = double.Parse(secondValue.Text);
-                    c = a * b;
-                    result.Text = c.ToString();
-                }
-                catch (Exception ex)
-                {
-
-
-                    firstValue.Text = "Input Number(s)";
-                    secondValue.Text = "Input Number(s)";
-                    result.Text = "Invalid Operation";
-                }
-            };
-            ButtonDivision.Click += delegate
-            {
-                try
-                {
-                    a = double.Parse(firstValue.Text);
-                    b = double.Parse(secondValue.Text);
-                    c = a / b;
-                    result.Text = c.ToString();
-
-                }
-                catch (Exception ex)
-                {
-
-
-                    result.Text = ex.Message;
-                    firstValue.Text = "Input Number(s)";
-                    secondValue.Text = "Input Number(s)";
-                    result.Text = "Invalid Operation";
-
-                }
-            };
-            ButtonSuppr.Click += delegate
-            {
-                secondValue.Text = "";
-                firstValue.Text = "";
-                result.Text = "";
-            };
-
+            Button button = (Button)v;
+            if ("0123456789.".Contains(button.Text))
+                AddDigitOrDecimalPoint(button.Text);
+            else if ("÷×+-".Contains(button.Text))
+                AddOperator(button.Text);
+            else if ("=" == button.Text)
+                Calculate();
+            else
+                Erase();
         }
 
-
-        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
+        private void AddDigitOrDecimalPoint(string value)
         {
-            Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            int index = @operator == null ? 0 : 1;
 
-            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+            if (value == "." && numbers[index].Contains("."))
+                return;
+
+            numbers[index] += value;
+
+            UpdateCalculatorText();
         }
+
+        private void AddOperator(string value)
+        {
+            if (numbers[1] != null)
+            {
+                Calculate(value);
+                return;
+            }
+
+            @operator = value;
+
+            UpdateCalculatorText();
+        }
+
+        private void Calculate(string newOperator = null)
+        {
+            double? result = null;
+            double? first = numbers[0] == null ? null : (double?)double.Parse(numbers[0]);
+            double? second = numbers[1] == null ? null : (double?)double.Parse(numbers[1]);
+
+            switch (@operator)
+            {
+                case "÷":
+                    result = first / second;
+                    break;
+                case "×":
+                    result = first * second;
+                    break;
+                case "+":
+                    result = first + second;
+                    break;
+                case "-":
+                    result = first - second;
+                    break;
+            }
+
+            if (result != null)
+            {
+                numbers[0] = result.ToString();
+                @operator = newOperator;
+                numbers[1] = null;
+                UpdateCalculatorText();
+            }
+        }
+
+        private void Erase()
+        {
+            numbers[0] = numbers[1] = null;
+            @operator = null;
+            UpdateCalculatorText();
+        }
+
+        private void UpdateCalculatorText() => calculatorText.Text = $"{numbers[0]} {@operator} {numbers[1]}";
     }
+
+
 }
